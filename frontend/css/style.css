@@ -1,0 +1,91 @@
+@import url('https://googleapis.com');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+
+:root {
+    --background: #fff;
+    --text-color: #000;
+    --border-color: #bbb;
+
+    --icon-invert: 0;
+
+    --font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+:root.dark {
+    --background: #000;
+    --text-color: #fff;
+    --border-color: #333;
+
+    --icon-invert: 1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+html, body {
+    background-color: var(--background);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* Navigation bar | NAVBAR */
+.navbar {
+    position: sticky;
+    top: 20px;
+    margin: 20px 20px;
+    padding: 5px;
+    padding-right: 20px;
+    padding-left: 10px;
+    z-index: 1000;
+
+    height: 65px;
+    border: 1px solid var(--border-color);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    gap: 40px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: var(--text-color)
+}
+
+.navbar .divider {
+    flex: 1;
+}
+
+.navbar .logo-link {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+
+    align-items: center;
+}
+
+.navbar .logo-link img {
+    height: 45px;
+    filter: invert(var(--icon-invert));
+}
+
+.navbar .logo-link p {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navbar button {
+    background-color: transparent;
+    border: 0;
+    color: var(--text-color)
+}
+
+.navbar button:hover {
+    cursor: pointer;
+}

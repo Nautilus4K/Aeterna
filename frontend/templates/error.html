@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Home | Aeterna</title>
+
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/error.css">
+        <link rel="icon" href="/img/favicon.svg" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="/img/favicon-dark.svg" media="(prefers-color-scheme: dark)">
+
+        <script src="/js/general.js"></script>
+    </head>
+    <body>
+        {{ navbar | safe }}
+
+        <div class="not_found_container">
+            <h1>{{ code }}</h1>
+            <h3>{{ message }}</h3>
+        </div>
+    </body>
+</html>

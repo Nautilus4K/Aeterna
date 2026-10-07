@@ -1,0 +1,6 @@
+requests
+cheroot   # For hosting WSGI on HTTPS
+waitress  # For hosting WSGI on HTTP
+bcrypt
+rich
+flask

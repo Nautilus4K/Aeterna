@@ -1,0 +1,25 @@
+.not_found_container {
+    width: 100vw;
+    height: calc(100vh - 65px - (2 * 40px));
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    color: var(--text-color);
+}
+
+.not_found_container h1,
+.not_found_container h3 {
+    margin: 10px;
+}
+
+.not_found_container h1 {
+    font-size: 100px;
+}
+
+.not_found_container h3 {
+    font-size: 40px;
+}
