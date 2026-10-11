@@ -34,10 +34,9 @@ def js_serve(filename: str):
 @app.route("/img/<filename>")
 def img_serve(filename: str):
     target_path = WEB_ROOT / "img" / filename
-    if target_path.exists() and target_path.is_file():
-        return send_file(target_path), 200
-    else:
-        return serve_error(404, "Not Found")
+    if target_path.is_file():
+        return send_file(target_path, max_age=31536000)   # 1 year
+    return serve_error(404, "Not Found")
 
 # Error handling
 @app.errorhandler(404)

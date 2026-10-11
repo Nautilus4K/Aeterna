@@ -4,3 +4,4 @@ waitress  # For hosting WSGI on HTTP
 bcrypt
 rich
 flask
+flask_compress

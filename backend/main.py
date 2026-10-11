@@ -2,6 +2,24 @@ from logger import *
 from app import *
 from ssl_manager import SSLManager
 
+from flask_compress import Compress
+app.config.update(
+    COMPRESS_ALGORITHM=["br", "gzip"],   # brotli if the client supports it, else gzip
+    COMPRESS_LEVEL=6,                    # gzip level
+    COMPRESS_BR_LEVEL=4,                 # brotli level (11 is far too slow for dynamic responses)
+    COMPRESS_MIN_SIZE=500,               # don't bother with tiny responses
+    # Only compress text-like content. Video/audio/images are already
+    # compressed, so recompressing them wastes CPU for ~0% savings.
+    COMPRESS_MIMETYPES=[
+        "text/html", "text/css", "text/plain", "text/xml", "text/vtt",
+        "text/javascript", "application/javascript", "application/json",
+        "application/manifest+json", "application/xml", "image/svg+xml",
+        "application/vnd.apple.mpegurl",   # HLS playlists
+        "application/dash+xml",            # DASH manifests
+    ],
+)
+Compress(app)
+
 import argparse
 import waitress
 import threading
@@ -16,7 +34,7 @@ parser = argparse.ArgumentParser(prog="Media-Server")
 parser.add_argument("-t", "--threads", type=int, help="Thread count for this server")
 parser.add_argument("-a", "--address", action="store", type=str, help="Address to host the website. Default 127.0.0.1")
 parser.add_argument("-p", "--port", action="store", type=int, help="Port to host the website. Default 8000")
-parser.add_argument("-u", "--users", action="store_true", help="Edit users settings")
+# parser.add_argument("-u", "--users", action="store_true", help="Edit users settings")
 # parser.add_argument("-d", "--disk", action="store", type=str, help="Target disk")
 parser.add_argument("-s", "--ssl", action="store_true", help="Serve over HTTPS using an auto-renewing Let's Encrypt certificate")
 parser.add_argument("--domain", action="store", type=str, default="nautilus4k.ddns.net", help="Domain name to request the SSL certificate for")
@@ -27,7 +45,7 @@ args = parser.parse_args()
 HOST = args.address if args.address is not None else "127.0.0.1"
 PORT = args.port if args.port is not None else 8000
 THREADCOUNT = args.threads if args.threads is not None else 4
-USERSEDITMODE = args.users
+# USERSEDITMODE = args.users
 
 sysPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 
