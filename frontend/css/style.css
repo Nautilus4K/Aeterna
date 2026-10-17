@@ -4,17 +4,20 @@
 :root {
     --background: #fff;
     --text-color: #000;
+    --active-color: #dedede;
     --border-color: #bbb;
     --text-dim-color: #777;
 
     --icon-invert: 0;
 
     --font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+    --ease_custom: cubic-bezier(.09,.53,.29,.96);
 }
 
 :root.dark {
     --background: #000;
     --text-color: #fff;
+    --active-color: #313131;
     --border-color: #333;
     --text-dim-color: #aaa;
 
@@ -35,6 +38,26 @@ html, body {
     padding: 0;
 }
 
+button {
+    background-color: var(--background);
+    color: var(--text-color);
+    font-family: var(--font-family);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    transition: .2s var(--ease_custom);
+}
+
+button:hover {
+    background-color: var(--active-color);
+    transform: scale(110%);
+}
+
+button:active {
+    background-color: var(--text-color);
+    color: var(--background);
+    transform: scale(90%);
+}
+
 /* Navigation bar | NAVBAR */
 .navbar {
     position: sticky;
@@ -47,6 +70,7 @@ html, body {
 
     height: 65px;
     border: 1px solid var(--border-color);
+    background-color: var(--background);
 
     display: flex;
     flex-direction: row;
@@ -96,4 +120,50 @@ html, body {
 
 .navbar button:hover {
     cursor: pointer;
+}
+
+.navbar_toggler {
+    display: none;
+}
+
+@media screen and (max-width: 767px) {
+    .navbar {
+        position: fixed;
+        flex-direction: column;
+        top: 0;
+        margin: 10px;
+        
+        height: calc(100vh - 20px);
+        padding: 30px 20px;
+        
+        left: -200px;  /* 180 + 20px (on the left and right) */
+        width: 180px;
+
+        transition: .3s var(--ease_custom);
+        opacity: 0;
+    }
+
+    .navbar.open {
+        left: 0;
+        opacity: 1;
+    }
+
+    .navbar .logo-link {
+        height: 50px;
+    }
+
+    .navbar_toggler {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        margin: 10px;
+
+        width: 50px;
+        height: 50px;
+    }
+
+    .navbar_toggler.hidden {
+        left: -70px;
+    }
 }

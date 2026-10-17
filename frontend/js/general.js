@@ -50,3 +50,19 @@ function switch_mode() {
         document.getElementById("mode-indicator").textContent = "dark_mode";
     }
 }
+
+function navbar_logo() {
+    // this is useless
+}
+
+function toggle_navbar() {
+    document.getElementById("navbar").classList.add("open");
+    document.getElementById("navbar_toggler").classList.add("hidden");
+}
+
+document.addEventListener("mousedown", (e) => {
+    if (!document.getElementById("navbar").contains(e.target)) {
+        document.getElementById("navbar").classList.remove("open");
+        document.getElementById("navbar_toggler").classList.remove("hidden");
+    }
+});
