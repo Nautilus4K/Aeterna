@@ -3,6 +3,9 @@ from utils import *
 from consts import WEB_ROOT
 import os
 import pathlib
+from db import DatabaseManager
+dbman = DatabaseManager()
+dbman.initdb()
 
 app = Flask(__name__)
 

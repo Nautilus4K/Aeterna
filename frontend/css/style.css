@@ -5,6 +5,7 @@
     --background: #fff;
     --text-color: #000;
     --border-color: #bbb;
+    --text-dim-color: #777;
 
     --icon-invert: 0;
 
@@ -15,6 +16,7 @@
     --background: #000;
     --text-color: #fff;
     --border-color: #333;
+    --text-dim-color: #aaa;
 
     --icon-invert: 1;
 }
@@ -55,7 +57,12 @@ html, body {
 
 .navbar a {
     text-decoration: none;
-    color: var(--text-color)
+    color: var(--text-dim-color);
+    transition: .3s;
+}
+
+.navbar a:hover {
+    color: var(--text-color);
 }
 
 .navbar .divider {
@@ -66,6 +73,7 @@ html, body {
     display: flex;
     flex-direction: row;
     height: 100%;
+    color: var(--text-color);
 
     align-items: center;
 }

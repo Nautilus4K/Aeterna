@@ -218,3 +218,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Credentials
+credentials.json
+postgresql/*
+!postgresql/postgresql.conf
+!postgresql/pg_hba.conf
+!postgresql/pg_ident.conf
+
+# Temporary files
+run/

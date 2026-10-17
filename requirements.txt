@@ -5,3 +5,6 @@ bcrypt
 rich
 flask
 flask_compress
+psycopg
+psycopg[pool]
+prettytable
