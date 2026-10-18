@@ -60,9 +60,19 @@ function toggle_navbar() {
     document.getElementById("navbar_toggler").classList.add("hidden");
 }
 
+function user_menu() {
+    if (getCookie("SESSION_TOKEN") == "") window.location.href = "/login"
+}
+
 document.addEventListener("mousedown", (e) => {
     if (!document.getElementById("navbar").contains(e.target)) {
         document.getElementById("navbar").classList.remove("open");
         document.getElementById("navbar_toggler").classList.remove("hidden");
+    }
+});
+
+document.addEventListener("DOMContentLoaded", (e) => {
+    if (getCookie("SESSION_TOKEN") == "") {
+        document.getElementById("usermenu_btn").innerHTML = '<span class="material-icons-outlined">person</span>';
     }
 });

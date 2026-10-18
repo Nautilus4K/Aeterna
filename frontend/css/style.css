@@ -12,6 +12,7 @@
 
     --font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
     --ease_custom: cubic-bezier(.09,.53,.29,.96);
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 :root.dark {
@@ -64,7 +65,7 @@ button:active {
     top: 20px;
     margin: 20px 20px;
     padding: 5px;
-    padding-right: 20px;
+    padding-right: 10px;
     padding-left: 10px;
     z-index: 1000;
 
@@ -120,10 +121,28 @@ button:active {
 
 .navbar button:hover {
     cursor: pointer;
+    transform: scale(100%);
+}
+
+.navbar button:active {
+    transform: scale(100%);
 }
 
 .navbar_toggler {
     display: none;
+}
+
+.navbar .usermenu_btn img {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 50%;
+}
+
+.navbar .usermenu_btn span {
+    /* Material Icon */
+    /* font-size: 40px; */
+    padding-right: 10px;
 }
 
 @media screen and (max-width: 767px) {
@@ -131,16 +150,17 @@ button:active {
         position: fixed;
         flex-direction: column;
         top: 0;
+        /* bottom: 0; */
         margin: 10px;
         
-        height: calc(100vh - 20px);
+        height: calc(100dvh - 20px);
         padding: 30px 20px;
         
         left: -200px;  /* 180 + 20px (on the left and right) */
         width: 180px;
 
-        transition: .3s var(--ease_custom);
         opacity: 0;
+        transition: .3s var(--ease-out-expo);
     }
 
     .navbar.open {

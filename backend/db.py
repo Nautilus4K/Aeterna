@@ -31,6 +31,7 @@ class DatabaseManager:
     def __init__(self):
         self.conn_info = f"host=localhost dbname={dbname} user={cred_data["postgres_user"]} password={cred_data["postgres_password"]}"
         self.pool: psycopg_pool.ConnectionPool | None = None
+        self.userlist: set[str] = set()
         self._open = False
 
     # Database initialization logic
@@ -56,6 +57,7 @@ class DatabaseManager:
                     cur.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(dbname)))
                     console.logok(f"Database '{dbname}' created successfully!")
 
+        missing_tables = False
         with psycopg.connect(self.conn_info) as conn:
             with conn.cursor() as cur:
                 cur.execute("SELECT 1 FROM pg_tables WHERE schemaname = %s AND tablename = %s", ("public", "users"))
@@ -79,9 +81,16 @@ class DatabaseManager:
                             birthday TIMESTAMPTZ DEFAULT NULL
                         )
                     """)
+                    missing_tables = True
+
+
+                # Add some other stuffs
+                users_data = cur.execute("SELECT username FROM users").fetchall()
+                for user in users_data:
+                    self.userlist.add(user[0])
         
             conn.commit()
-            console.logok("Added missing tables")
+            if missing_tables: console.logok("Added missing tables")
 
         self.pool = psycopg_pool.ConnectionPool(self.conn_info, min_size=2, max_size=20, open=False)
         self.pool.open()
@@ -133,6 +142,8 @@ class DatabaseManager:
             conn.execute("DELETE FROM users WHERE username = %s", (username, ))
             conn.commit()
 
+        self.userlist.remove(username)
+
     def get_user_password_hash(self, username: str) -> bytes:
         assert self.pool is not None
         with self.pool.connection() as conn:
@@ -147,3 +158,6 @@ class DatabaseManager:
             data = conn.execute("SELECT bio, gender, created, birthday FROM users WHERE username = %s", (username, )).fetchone()
             assert data is not None
             return data
+
+    def user_exists(self, username: str) -> bool:
+        return username in self.userlist

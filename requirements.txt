@@ -8,3 +8,4 @@ flask_compress
 psycopg
 psycopg[pool]
 prettytable
+pillow
