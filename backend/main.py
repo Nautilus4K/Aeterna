@@ -18,7 +18,6 @@ app.config.update(
         "application/dash+xml",            # DASH manifests
     ],
 )
-Compress(app)
 
 import argparse
 import waitress
@@ -46,6 +45,8 @@ HOST = args.address if args.address is not None else "127.0.0.1"
 PORT = args.port if args.port is not None else 8000
 THREADCOUNT = args.threads if args.threads is not None else 4
 # USERSEDITMODE = args.users
+
+app.config["DEVELOPMENT"] = bool(HOST == "127.0.0.1")
 
 sysPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 
@@ -75,6 +76,9 @@ if __name__ == "__main__":
             from cheroot.wsgi import Server as WSGIServer
             from cheroot.ssl.builtin import BuiltinSSLAdapter
 
+            app.config["SECURE_SERVER"] = True
+            Compress(app)
+
             server = WSGIServer((HOST, PORT), app, numthreads=THREADCOUNT)
             server.ssl_adapter = BuiltinSSLAdapter(
                 certificate=ssl_manager.cert_path, # pyright: ignore[reportOptionalMemberAccess]
@@ -86,6 +90,8 @@ if __name__ == "__main__":
                 console.log("Shutting down...")
                 server.stop()
         else:
+            # app.config["SECURE_SERVER"] = True
+            Compress(app)
             waitress.serve(app, host=HOST, port=PORT, threads=THREADCOUNT)
             # subprocess.Popen([
             #     "mod_wsgi-express", "start-server", "app.py",

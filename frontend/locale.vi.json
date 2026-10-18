@@ -1,0 +1,13 @@
+{
+    "homepage": "Trang Chủ",
+    "novelpage": "Tiểu Thuyết",
+    "docpage": "Tài Liệu",
+
+    "login": "Đăng Nhập",
+    "username_label": "Tên Đăng Nhập",
+    "password_label": "Mật Khẩu",
+
+    "wip": "ĐANG ĐƯỢC XÂY DỰNG",
+    "login_rate_limited": "Thử quá nhiều. Chậm lại.",
+    "login_credentials": "Sai tên đăng nhập hoặc mật khẩu."
+}

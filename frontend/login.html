@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ locale.homepage }} | Aeterna</title>
+
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/login.css">
+        <link rel="icon" href="/img/favicon.svg" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="/img/favicon-dark.svg" media="(prefers-color-scheme: dark)">
+
+        <script src="/js/general.js"></script>
+        <script src="/js/login.js" defer></script>
+    </head>
+    <body>
+        {% include 'templates/navbar.html' %}
+
+        <div class="login_container">
+            <div class="login_pane">
+                <h1>{{ locale.login }}</h1>
+                <input type="text" id="username_field" placeholder="{{ locale.username_label }}">
+                <input type="password" id="password_field" placeholder="{{ locale.password_label }}">
+
+                <p class="alert" id="alert"></p>
+
+                <button onclick="login()">{{ locale.login }}</button>
+            </div>
+        </div>
+    </body>
+</html>

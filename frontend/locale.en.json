@@ -1,0 +1,13 @@
+{
+    "homepage": "Home",
+    "novelpage": "Novels",
+    "docpage": "Documents",
+
+    "login": "Log in",
+    "username_label": "Username",
+    "password_label": "Password",
+
+    "wip": "UNDER CONSTRUCTION",
+    "login_rate_limited": "Too many attempts. Timed out.",
+    "login_credentials": "Wrong username or password."
+}

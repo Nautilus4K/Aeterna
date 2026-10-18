@@ -1,16 +1,16 @@
 <button class="navbar_toggler" id="navbar_toggler", onclick="toggle_navbar()"><span class="material-icons-outlined">menu</span></button>
 
 <div class="navbar" id="navbar">
-    <button id="logo-link" class="logo-link" onclick="navbar_logo()">
+    <a id="logo-link" class="logo-link" href="/">
         <img src="/img/favicon.svg">
         <p>AETERNA</p>
-    </button>
+    </a>
 
-    <a href="/">Home</a>
+    <a href="/">{{ locale.homepage }}</a>
 
-    <a href="/novels">Novels</a>
+    <a href="/novels">{{ locale.novelpage }}</a>
 
-    <a href="/docs">Documents</a>
+    <a href="/docs">{{ locale.docpage }}</a>
     
     <div class="divider"></div>
 
@@ -20,7 +20,7 @@
         </span>
     </button>
     
-    <button onclick="user_menu()" class="usermenu_btn" id="usermenu_btn">
-        <img src="/img/user/nautilus/100">
+    <button onclick="user_menu()" data-mode="{{ usermenu_mode }}" class="usermenu_btn" id="usermenu_btn">
+        {{ user_pfp_button | safe }}
     </button>
 </div>
