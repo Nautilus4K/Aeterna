@@ -1,11 +1,13 @@
 from flask import Flask, Response, request, redirect, render_template_string, send_file, abort, send_from_directory, url_for
 from utils import serve_basic_site, serve_error, authenticate_user, get_locale, LOCALES
-from consts import WEB_ROOT
+from consts import WEB_ROOT, SESSIONS_SAVED_PATH, SESSIONS_MAX_AGE
 from PIL import Image
 import os
 import pathlib
 import shutil
 import secrets
+import json
+import threading
 from db import DatabaseManager
 db = DatabaseManager()
 db.initdb()
@@ -15,7 +17,19 @@ app.config["SECURE_SERVER"] = False # HTTPS
 app.config["DEVELOPMENT"] = False # In development?
 
 # Also authentication. Sessions list actually.
-sessions_list: dict[str, str] = {}
+sessions_list: dict[str, dict] = {}
+sessions_list_lock = threading.Lock()
+if os.path.exists(SESSIONS_SAVED_PATH):
+    sessions_list = json.load(open(SESSIONS_SAVED_PATH, "r", encoding='utf-8'))
+
+def save_sessions_async():
+    thread = threading.Thread(target=save_sessions)
+    thread.start()
+
+def save_sessions():
+    with sessions_list_lock:
+        with open(SESSIONS_SAVED_PATH, "w", encoding='utf-8') as f:
+            json.dump(sessions_list, f)
 
 # Routing basic sites
 @app.route("/")
@@ -124,12 +138,16 @@ def auth():
 
     if authenticate_user(db, username, password):
         new_token = secrets.token_hex(16)
-        sessions_list[new_token] = username
+        sessions_list[new_token] = {
+            "user": username,
+            "time": int(time.time())
+        }
+        save_sessions_async()
 
         response = Response("Authorized")
         response.set_cookie(
             key="SESSION_TOKEN",
-            max_age=2592000, # 30 days
+            max_age=SESSIONS_MAX_AGE, # 30 days
             httponly=True, # Prevents client side javascript from reading
             samesite='Lax',
             secure=app.config["SECURE_SERVER"],

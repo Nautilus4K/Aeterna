@@ -31,7 +31,7 @@ def get_locale(cookies: ImmutableMultiDict[str, str]):
     if locale not in LOCALE_PREFIXES: locale = "en"
     return locale
 
-def serve_basic_site(sessions_list: dict[str, str], path: pathlib.Path, cookies: ImmutableMultiDict[str, str], return_code: int = 200) -> tuple[Response, int]:
+def serve_basic_site(sessions_list: dict[str, dict], path: pathlib.Path, cookies: ImmutableMultiDict[str, str], return_code: int = 200) -> tuple[Response, int]:
     if path.exists() and path.is_file():
         locale = get_locale(cookies)
 
@@ -44,8 +44,8 @@ def serve_basic_site(sessions_list: dict[str, str], path: pathlib.Path, cookies:
         session_token = cookies.get("SESSION_TOKEN")
         username = "NULL"
         if session_token in sessions_list:
-            userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]}/100">'
-            username = sessions_list[session_token]
+            userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">'
+            username = sessions_list[session_token]["user"]
         else:
             userbutton_snippet = LOCALES[locale]["login"]
         
@@ -59,7 +59,7 @@ def serve_basic_site(sessions_list: dict[str, str], path: pathlib.Path, cookies:
     else:
         return serve_error(sessions_list, 404, "Not Found", cookies)
 
-def serve_error(sessions_list: dict[str, str], error: int, message: str, cookies: ImmutableMultiDict[str, str]) -> tuple[Response, int]:
+def serve_error(sessions_list: dict[str, dict], error: int, message: str, cookies: ImmutableMultiDict[str, str]) -> tuple[Response, int]:
     # return serve_basic_site(NOT_FOUND_PATH, 404)
     locale = get_locale(cookies)
 
@@ -69,8 +69,8 @@ def serve_error(sessions_list: dict[str, str], error: int, message: str, cookies
     session_token = cookies.get("SESSION_TOKEN")
     username = "NULL"
     if session_token in sessions_list:
-        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]}/100">'
-        username = sessions_list[session_token]
+        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">'
+        username = sessions_list[session_token]["user"]
     else:
         userbutton_snippet = LOCALES[locale]["login"]
     

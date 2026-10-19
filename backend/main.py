@@ -23,6 +23,7 @@ import argparse
 import waitress
 # import threading
 import os
+import time
 # import json
 # import bcrypt
 # import getpass
@@ -49,6 +50,22 @@ THREADCOUNT = args.threads if args.threads is not None else 4
 app.config["DEVELOPMENT"] = bool(HOST == "127.0.0.1")
 
 sysPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
+
+from consts import SESSIONS_SAVED_PATH, SESSIONS_MAX_AGE
+# Clean the sessions
+with open(SESSIONS_SAVED_PATH, "r", encoding='utf-8') as f:
+    sessions_data = json.load(f)
+
+removed_keys: list[str] = []
+for session in sessions_data:
+    if time.time() - sessions_data[session]["time"] > SESSIONS_MAX_AGE:
+        removed_keys.append(session)
+
+for removing_session in removed_keys:
+    del sessions_data[removing_session]
+
+with open(SESSIONS_SAVED_PATH, "w", encoding='utf-8') as f:
+    json.dump(sessions_data, f)
 
 console = ConsoleLogger(True)
 if __name__ == "__main__":

@@ -228,3 +228,4 @@ postgresql/*
 
 # Temporary files
 run/
+sessions.json

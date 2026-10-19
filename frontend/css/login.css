@@ -7,6 +7,18 @@
     align-items: center;
 }
 
+@keyframes loginPaneUp {
+    0% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .login_pane {
     width: 400px;
     height: 330px;
@@ -20,6 +32,8 @@
     padding: 40px;
 
     gap: 20px;
+
+    animation: loginPaneUp .5s var(--ease-out-expo);
 }
 
 .login_pane input {
