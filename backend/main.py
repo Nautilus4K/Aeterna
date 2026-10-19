@@ -53,19 +53,20 @@ sysPath = os.path.dirname(os.path.abspath(__file__)).replace("\\", "/")
 
 from consts import SESSIONS_SAVED_PATH, SESSIONS_MAX_AGE
 # Clean the sessions
-with open(SESSIONS_SAVED_PATH, "r", encoding='utf-8') as f:
-    sessions_data = json.load(f)
+if os.path.exists(SESSIONS_SAVED_PATH):
+    with open(SESSIONS_SAVED_PATH, "r", encoding='utf-8') as f:
+        sessions_data = json.load(f)
 
-removed_keys: list[str] = []
-for session in sessions_data:
-    if time.time() - sessions_data[session]["time"] > SESSIONS_MAX_AGE:
-        removed_keys.append(session)
+    removed_keys: list[str] = []
+    for session in sessions_data:
+        if time.time() - sessions_data[session]["time"] > SESSIONS_MAX_AGE:
+            removed_keys.append(session)
 
-for removing_session in removed_keys:
-    del sessions_data[removing_session]
+    for removing_session in removed_keys:
+        del sessions_data[removing_session]
 
-with open(SESSIONS_SAVED_PATH, "w", encoding='utf-8') as f:
-    json.dump(sessions_data, f)
+    with open(SESSIONS_SAVED_PATH, "w", encoding='utf-8') as f:
+        json.dump(sessions_data, f)
 
 console = ConsoleLogger(True)
 if __name__ == "__main__":
