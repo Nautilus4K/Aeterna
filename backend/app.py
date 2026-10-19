@@ -156,3 +156,14 @@ def auth():
 
         return response, 200
     return LOCALES[locale]["login_credentials"], 401
+
+@app.route("/logout")
+def logout_session():
+    session_token = request.cookies.get("SESSION_TOKEN")
+    if session_token in sessions_list:
+        del sessions_list[session_token]
+        save_sessions_async()
+
+    response = redirect(url_for("page_main"))
+    response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0)
+    return response

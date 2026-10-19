@@ -55,7 +55,9 @@ function toggle_navbar() {
 function user_menu() {
     if (document.getElementById('usermenu_btn').dataset.mode == "login") window.location.href = "/login";
     else {
-        console.log("USER MENU");
+        // console.log("USER MENU");
+        const usermenu = document.getElementById("usermenu");
+        usermenu.classList.toggle("hidden");
     }
 }
 
@@ -81,5 +83,9 @@ document.addEventListener("mousedown", (e) => {
     if (!document.getElementById("navbar").contains(e.target)) {
         document.getElementById("navbar").classList.remove("open");
         document.getElementById("navbar_toggler").classList.remove("hidden");
+    }
+
+    if (!document.getElementById("usermenu").classList.contains("hidden") && !document.getElementById("usermenu").contains(e.target) && !document.getElementById("usermenu_btn").contains(e.target)) {
+        document.getElementById("usermenu").classList.add("hidden");
     }
 });

@@ -181,6 +181,59 @@ button:active {
     visibility: visible;
 }
 
+/* usermenu */
+.usermenu {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+
+    width: 200px;
+    /* height: 200px; */
+
+    border: 1px solid var(--border-color);
+    background-color: var(--background);
+
+    top: 80px;
+    right: 0;
+
+    transform: translateY(0);
+
+    transition: 0.2s var(--ease_custom);
+
+    overflow: hidden;
+
+    z-index: 20;
+}
+
+.usermenu.hidden {
+    transform: translateY(-50px);
+
+    opacity: 0;
+    visibility: hidden;
+}
+
+.usermenu a, .usermenu button {
+    padding: 10px;
+
+    transition: .3s var(--ease_custom);
+}
+
+.usermenu a:hover, .usermenu button:hover {
+    background-color: var(--active-color);
+}
+
+.usermenu a:active, .usermenu button:active {
+    padding-left: 30px;
+    background-color: var(--text-color);
+    color: var(--background);
+    
+    transform: scale(90%);
+}
+
+.usermenu button:focus {
+    transform: scale(100%);
+}
+
 @media screen and (max-width: 767px) {
     .navbar {
         position: fixed;
