@@ -5,6 +5,7 @@ import psycopg
 import getpass
 import bcrypt
 import prettytable
+from utils import authenticate_user
 
 db = DatabaseManager()
 db.initdb()
@@ -28,7 +29,7 @@ if __name__ == "__main__":
 
         print(table)
 
-        action = str(input("[A]dd, [M]odify, [D]elete, [I]nspect, E[X]it: ")).lower()
+        action = str(input("[A]dd, [M]odify, [D]elete, [I]nspect, [C]heck, E[X]it: ")).lower()
 
         if action == "x":
             break
@@ -80,3 +81,8 @@ if __name__ == "__main__":
             print("> Birthday:", data[3])
 
             input("Enter to continue...")
+        elif action == "c":
+            username = str(input("Username: "))
+            password = getpass.getpass("Password: ")
+
+            print("OK" if authenticate_user(db, username, password) else "FAIL")
