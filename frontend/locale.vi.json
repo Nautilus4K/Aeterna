@@ -9,5 +9,6 @@
 
     "wip": "ĐANG ĐƯỢC XÂY DỰNG",
     "login_rate_limited": "Thử quá nhiều. Chậm lại.",
-    "login_credentials": "Sai tên đăng nhập hoặc mật khẩu."
+    "login_credentials": "Sai tên đăng nhập hoặc mật khẩu.",
+    "tooltip_lang_toggle": "Đổi ngôn ngữ của bạn."
 }

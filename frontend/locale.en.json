@@ -9,5 +9,6 @@
 
     "wip": "UNDER CONSTRUCTION",
     "login_rate_limited": "Too many attempts. Timed out.",
-    "login_credentials": "Wrong username or password."
+    "login_credentials": "Wrong username or password.",
+    "tooltip_lang_toggle": "Change your language."
 }

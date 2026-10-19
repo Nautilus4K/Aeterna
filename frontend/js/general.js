@@ -20,22 +20,6 @@ function getCookie(cname) {
     return "";
 }
 
-// Prepare the modes
-document.addEventListener("DOMContentLoaded", () => {
-    if (getCookie("mode") == "") {
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (isDarkMode) {
-            setCookie("mode", "dark", 14);
-        }
-        else setCookie("mode", "light", 14)
-    }
-
-    if (getCookie("mode") == "dark") {
-        document.documentElement.classList.add("dark");
-        document.getElementById("mode-indicator").textContent = "dark_mode";
-    }
-});
-
 function switch_mode() {
     if (getCookie("mode") == "dark") {
         setCookie("mode", "light", 14);
@@ -51,6 +35,18 @@ function switch_mode() {
     }
 }
 
+if (getCookie("locale") == "") setCookie("locale", "en", 365 * 24 * 60 * 60);
+
+function switch_lang() {
+    if (getCookie("locale") == "en") {
+        setCookie("locale", "vi", 365 * 24 * 60 * 60);
+        window.location.href = window.location.href;
+    } else {
+        setCookie("locale", "en", 365 * 24 * 60 * 60);
+        window.location.href = window.location.href;
+    }
+}
+
 function toggle_navbar() {
     document.getElementById("navbar").classList.add("open");
     document.getElementById("navbar_toggler").classList.add("hidden");
@@ -62,6 +58,24 @@ function user_menu() {
         console.log("USER MENU");
     }
 }
+
+// Prepare the modes
+document.addEventListener("DOMContentLoaded", () => {
+    if (getCookie("mode") == "") {
+        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDarkMode) {
+            setCookie("mode", "dark", 14);
+        }
+        else setCookie("mode", "light", 14)
+    }
+
+    if (getCookie("mode") == "dark") {
+        document.documentElement.classList.add("dark");
+        document.getElementById("mode-indicator").textContent = "dark_mode";
+    }
+
+    document.getElementById("lang_toggler").textContent = getCookie("locale").toUpperCase();
+});
 
 document.addEventListener("mousedown", (e) => {
     if (!document.getElementById("navbar").contains(e.target)) {

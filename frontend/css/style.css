@@ -150,6 +150,37 @@ button:active {
     margin-right: 10px;
 }
 
+/* navbar: language toggler with tooltips */
+.tooltip {
+    /* generic p tooltip element */
+    /* display: block; */
+    padding: 10px;
+    background-color: var(--background);
+    border: 1px solid var(--border-color);
+
+    position: absolute;
+    min-width: 20px;
+    /* top: 0px; */
+    right: 60px;
+
+    opacity: 0;
+    transform: translateY(20px);
+    display: block;
+    
+    visibility: hidden;
+
+    transition: transform .3s var(--ease-out-expo), opacity .2s;
+    /* transition: .3s; */
+}
+
+.lang_toggler_container:hover .tooltip {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+
+    visibility: visible;
+}
+
 @media screen and (max-width: 767px) {
     .navbar {
         position: fixed;
