@@ -3,7 +3,8 @@
     "novelpage": "Tiểu Thuyết",
     "docpage": "Tài Liệu",
 
-    "login": "Đăng Nhập",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất",
     "username_label": "Tên Đăng Nhập",
     "password_label": "Mật Khẩu",
 

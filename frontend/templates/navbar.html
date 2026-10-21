@@ -1,16 +1,18 @@
-<button class="navbar_toggler" id="navbar_toggler", onclick="toggle_navbar()"><span class="material-icons-outlined">menu</span></button>
-
 <div class="navbar" id="navbar">
+    <button id="mobile_menu_toggler" class="mobile_menu_toggler" onclick="toggle_menu()">
+        <span class="material-icons-outlined">menu</span>
+    </button>
+
     <a id="logo-link" class="logo-link" href="/">
         <img src="/img/favicon.svg">
         <p>AETERNA</p>
     </a>
 
-    <a href="/">{{ locale.homepage }}</a>
+    <a class="navlink" href="/">{{ locale.homepage }}</a>
 
-    <a href="/novels">{{ locale.novelpage }}</a>
+    <a class="navlink" href="/novels">{{ locale.novelpage }}</a>
 
-    <a href="/docs">{{ locale.docpage }}</a>
+    <a class="navlink" href="/docs">{{ locale.docpage }}</a>
     
     <div class="divider"></div>
 
@@ -30,6 +32,16 @@
     </button>
 
     <div class="usermenu hidden" id="usermenu">
-        <a href="/logout">Log out</a>
+        <a href="/logout">{{ locale.logout }}</a>
     </div>
+</div>
+
+<div class="mobile_menu" id="mobile_menu">
+    <a class="navlink" href="/">{{ locale.homepage }}</a>
+    <a class="navlink" href="/novels">{{ locale.novelpage }}</a>
+    <a class="navlink" href="/docs">{{ locale.docpage }}</a>
+
+    <div class="divider"></div>
+
+    <img class="logo" src="/img/favicon.svg">
 </div>

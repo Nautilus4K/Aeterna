@@ -47,9 +47,8 @@ function switch_lang() {
     }
 }
 
-function toggle_navbar() {
-    document.getElementById("navbar").classList.add("open");
-    document.getElementById("navbar_toggler").classList.add("hidden");
+function toggle_menu() {
+    document.getElementById("mobile_menu").classList.add("open");   
 }
 
 function user_menu() {
@@ -80,9 +79,8 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("mousedown", (e) => {
-    if (!document.getElementById("navbar").contains(e.target)) {
-        document.getElementById("navbar").classList.remove("open");
-        document.getElementById("navbar_toggler").classList.remove("hidden");
+    if (!document.getElementById("mobile_menu").contains(e.target)) {
+        document.getElementById("mobile_menu").classList.remove("open");
     }
 
     if (!document.getElementById("usermenu").classList.contains("hidden") && !document.getElementById("usermenu").contains(e.target) && !document.getElementById("usermenu_btn").contains(e.target)) {

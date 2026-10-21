@@ -53,10 +53,10 @@ def css_serve(filename: str):
         # Disable caching entirely in development
         return send_from_directory(directory, filename, max_age=0)
     else:
-        # Caches for 1 hour in production
-        response = send_from_directory(directory, filename, max_age=3600)
+        # Caches for 5 minutes in production
+        response = send_from_directory(directory, filename, max_age=300)
         # Add the 'immutable' and 'public' directives manually since max_age only sets max-age
-        response.headers["Cache-Control"] = "max-age=3600, public"
+        response.headers["Cache-Control"] = "max-age=300, public"
         return response
 
 # Routing JavaScript
@@ -67,8 +67,8 @@ def js_serve(filename: str):
     if app.config["DEVELOPMENT"]:
         return send_from_directory(directory, filename, max_age=0)
     else:
-        response = send_from_directory(directory, filename, max_age=3600)
-        response.headers["Cache-Control"] = "max-age=3600, public"
+        response = send_from_directory(directory, filename, max_age=300)
+        response.headers["Cache-Control"] = "max-age=300, public"
         return response
     
 # Images section
