@@ -1,6 +1,7 @@
 from flask import Flask, Response, request, redirect, render_template_string, send_file, abort, send_from_directory, url_for
-from utils import serve_basic_site, serve_error, authenticate_user, get_locale, LOCALES
+from utils import serve_basic_site, serve_error, authenticate_user, get_locale, LOCALES, change_user_passwd, serve_profile
 from consts import WEB_ROOT, SESSIONS_SAVED_PATH, SESSIONS_MAX_AGE
+from cachetools import TTLCache
 from PIL import Image
 import os
 import pathlib
@@ -35,13 +36,23 @@ def save_sessions():
 @app.route("/")
 def page_main():
     # print(WEB_ROOT)
-    return serve_basic_site(sessions_list, WEB_ROOT / "index.html", request.cookies)
+    return serve_basic_site(db, sessions_list, WEB_ROOT / "index.html", request.cookies)
 
 @app.route("/login")
 def page_login():
     if request.cookies.get("SESSION_TOKEN") not in sessions_list:
-        return serve_basic_site(sessions_list, WEB_ROOT / "login.html", request.cookies)
+        return serve_basic_site(db, sessions_list, WEB_ROOT / "login.html", request.cookies)
     return redirect(url_for('page_main'))
+
+@app.route("/config")
+def page_config():
+    if request.cookies.get("SESSION_TOKEN") not in sessions_list:
+        return redirect(url_for('page_login'))
+    return serve_basic_site(db, sessions_list, WEB_ROOT / "config.html", request.cookies)
+
+@app.route("/user/<username>")
+def page_profile(username: str):
+    return serve_profile(db, sessions_list, username, request.cookies)
 
 # Routing css
 @app.route("/css/<path:filename>")
@@ -82,24 +93,45 @@ user_default_pfp_paths: list[pathlib.Path] = [
 # Routing user profile pictures
 @app.route("/img/user/<username>/<size>")
 def img_user_serve(username: str, size: str):
-    target_path = WEB_ROOT / "img" / ("user." + username + "." + size + ".webp")
-    user_original_path = WEB_ROOT / "img" / ("user." + username + ".500.webp") # Original file is size 500
+    if size not in pfp_sizes:
+        return serve_error(db, sessions_list, 404, "Not Found", request.cookies)
 
-    if size in pfp_sizes:
-        if target_path.exists():
-            return send_file(target_path, max_age=1000) # 1000 seconds
-        elif user_original_path.exists():
-            # Self recovery
-            img = Image.open(user_original_path)
-            img = img.resize((int(size), int(size))) # Yeah pfps are SQUARE
-            img.save(target_path)
+    target_path = WEB_ROOT / "img" / f"user.{username}.{size}.webp"
+
+    # If the requested size already exists, serve it directly
+    if target_path.exists():
+        return send_file(target_path, max_age=1000)
+
+    # Self-Healing: Try to find ANY existing size variant to resize from (500 -> 250 -> 100)
+    source_path = None
+    for fallback_size in ["500", "250", "100"]:
+        candidate = WEB_ROOT / "img" / f"user.{username}.{fallback_size}.webp"
+        if candidate.exists():
+            source_path = candidate
+            break
+
+    if source_path:
+        try:
+            with Image.open(source_path) as img:
+                img = img.resize((int(size), int(size)))
+                img.save(target_path, "WEBP")
             return send_file(target_path, max_age=1000)
-        elif db.user_exists(username):
-            shutil.copyfile(user_default_pfp_paths[0], WEB_ROOT / "img" / ("user." + username + ".100.webp"))
-            shutil.copyfile(user_default_pfp_paths[1], WEB_ROOT / "img" / ("user." + username + ".250.webp"))
-            shutil.copyfile(user_default_pfp_paths[2], WEB_ROOT / "img" / ("user." + username + ".500.webp"))
-            return send_file(target_path, max_age=1000)
-    return serve_error(sessions_list, 404, "Not Found", request.cookies)
+        except Exception:
+            # If the image file is corrupted, fall through to defaults
+            pass
+
+    # If no custom images exist at all, but the user is valid, provision defaults
+    if db.user_exists(username):
+        try:
+            shutil.copyfile(user_default_pfp_paths[0], WEB_ROOT / "img" / f"user.{username}.100.webp")
+            shutil.copyfile(user_default_pfp_paths[1], WEB_ROOT / "img" / f"user.{username}.250.webp")
+            shutil.copyfile(user_default_pfp_paths[2], WEB_ROOT / "img" / f"user.{username}.500.webp")
+            if target_path.exists():
+                return send_file(target_path, max_age=1000)
+        except Exception:
+            pass
+
+    return serve_error(db, sessions_list, 404, "Not Found", request.cookies)
 
 # Routing images
 @app.route("/img/<filename>")
@@ -107,29 +139,23 @@ def img_serve(filename: str):
     target_path = WEB_ROOT / "img" / filename
     if target_path.is_file():
         return send_file(target_path, max_age=31536000)   # 1 year
-    return serve_error(sessions_list, 404, "Not Found", request.cookies)
+    return serve_error(db, sessions_list, 404, "Not Found", request.cookies)
 
 # Error handling
 @app.errorhandler(404)
 def error_handler_404(e):
-    return serve_error(sessions_list, 404, "Not Found", request.cookies)
+    return serve_error(db, sessions_list, 404, "Not Found", request.cookies)
 
 # Authentication
 import time
-rate_limiter = {}
-rate_limit_secs = 10 # seconds
+rate_limiter = TTLCache(maxsize=10000, ttl=30)
 
 @app.route("/loginauth", methods=['POST'])
 def auth():
     if request.remote_addr in rate_limiter:
-        rate_limiter[request.remote_addr][0] += 1
-        if rate_limiter[request.remote_addr][0] > 3:
-            if time.time() - rate_limiter[request.remote_addr][1] > rate_limit_secs:
-                rate_limiter[request.remote_addr] = [1, int(time.time())]
-            else:
-                return LOCALES[get_locale(request.cookies)]["login_rate_limited"], 429
+        return LOCALES[get_locale(request.cookies)]["login_rate_limited"], 429
     else:
-        rate_limiter[request.remote_addr] = [1, int(time.time())]
+        rate_limiter[request.remote_addr] = None
 
     locale = get_locale(request.cookies)
     data = request.get_json()
@@ -167,3 +193,20 @@ def logout_session():
     response = redirect(url_for("page_main"))
     response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0)
     return response
+
+@app.route("/api/changepass")
+def changepass_session():
+    session_token = request.cookies.get("SESSION_TOKEN")
+    if session_token not in sessions_list:
+        return "Forbidden", 403
+    username = sessions_list[session_token]["user"]
+
+    current_pass = request.headers.get("cpass", "")
+    if current_pass == "": return "Forbidden", 403
+
+    if authenticate_user(db, username, current_pass):
+        new_pass = request.headers.get("npass", "")
+        if new_pass == "": return "Forbidden", 403
+
+        change_user_passwd(db, username, new_pass)
+    return "Forbidden", 403

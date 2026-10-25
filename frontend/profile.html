@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ profile_username }} | Aeterna</title>
+
+        <link rel="stylesheet" href="/css/style.css">
+        <link rel="stylesheet" href="/css/profile.css">
+        <link rel="icon" href="/img/favicon.svg" media="(prefers-color-scheme: light)">
+        <link rel="icon" href="/img/favicon-dark.svg" media="(prefers-color-scheme: dark)">
+
+        <script src="/js/general.js"></script>
+    </head>
+    <body>
+        {% include 'templates/navbar.html' %}
+
+        <div class="profile_view">
+            <div class="profile_band">
+                <img src="/img/user/{{ profile_username }}/500">
+                
+                <div class="profile_name">
+                    <h1>{{ profile_realname }}</h1>
+                    <h3>{{ profile_username }}</h1>
+                </div>
+
+                <div class="divider">
+                    <p>---</p>
+                </div>
+
+                <div class="profile_field">
+                    <h4>{{ locale.profile_gender }}:</h4>
+                    <p>{{ profile_gender }}</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="profile_field">
+                    <h4>{{ locale.profile_bio }}:</h4>
+                    <p>{{ profile_bio | replace('\n', '<br>') | safe }}</p>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="profile_field">
+                    <h4>{{ locale.profile_createddate }}:</h4>
+                    <p>{{ profile_createddate }}</p>
+                </div>
+
+                <div class="profile_field">
+                    <h4>{{ locale.profile_birthday }}:</h4>
+                    <p>{{ profile_birthday }}</p>
+                </div>
+            </div>
+
+            <div class="profile_more">
+                
+            </div>
+        </div>
+    </body>
+</html>

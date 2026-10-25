@@ -16,14 +16,14 @@ if __name__ == "__main__":
         # print(data)
 
         table = prettytable.PrettyTable()
-        table.field_names = ["username", "password_hash", "bio", "gender", "created", "birthday"]
+        table.field_names = ["username", "realname", "password_hash", "bio", "gender", "created", "birthday", "linked_docs"]
         for row in data:
             formatted_row = list(row)
-            formatted_row[1] = formatted_row[1].decode('utf-8')
-            # if len(formatted_row[1]) > 15: formatted_row[1] = formatted_row[1][:13] + "..."
+            formatted_row[2] = formatted_row[2].decode('utf-8')
             if len(formatted_row[2]) > 15: formatted_row[2] = formatted_row[2][:13] + "..."
+            if len(formatted_row[3]) > 15: formatted_row[3] = formatted_row[3][:13] + "..."
 
-            formatted_row[3] = "F" if formatted_row[3] else "M"
+            formatted_row[4] = "F" if formatted_row[4] else "M"
 
             table.add_row(formatted_row)
 
@@ -62,10 +62,21 @@ if __name__ == "__main__":
 
                 db.change_user_passwd(username, hashed)
             else:
-                bio = str(input("Bio: "))
+                realname = str(input("Real name: "))
+                # bio = str(input("Bio: "))
+                print("Bio (type 'END' on a new line to finish):")
+                lines = []
+                while True:
+                    line = input()
+                    if line.strip() == "END":
+                        break
+                    lines.append(line)
+
+                bio = "\n".join(lines)
+
                 gender = (str(input("Gender: [M]ale, [F]emale: ")) == "F")
 
-                db.modify_user(username, bio, gender)
+                db.modify_user(username, realname, bio, gender)
         elif action == "d":
             username = str(input("Target username: "))
             db.delete_user(username)
@@ -75,10 +86,11 @@ if __name__ == "__main__":
             data = db.get_user_data(username)
 
             print("> Password:", password.decode('utf-8'))
-            print("> Bio:", data[0])
-            print("> Gender:", "F" if data[1] else "M")
-            print("> Created:", data[2])
-            print("> Birthday:", data[3])
+            print("> Real name:", data[0])
+            print("> Bio:", data[1])
+            print("> Gender:", "F" if data[2] else "M")
+            print("> Created:", data[3])
+            print("> Birthday:", data[4])
 
             input("Enter to continue...")
         elif action == "c":

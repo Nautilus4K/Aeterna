@@ -60,22 +60,23 @@ function user_menu() {
     }
 }
 
+if (getCookie("mode") == "") {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    if (isDarkMode) {
+        setCookie("mode", "dark", 14);
+    }
+    else setCookie("mode", "light", 14)
+}
+
+if (getCookie("mode") == "dark") {
+    document.documentElement.classList.add("dark");
+}
+
 // Prepare the modes
 document.addEventListener("DOMContentLoaded", () => {
-    if (getCookie("mode") == "") {
-        const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        if (isDarkMode) {
-            setCookie("mode", "dark", 14);
-        }
-        else setCookie("mode", "light", 14)
-    }
-
-    if (getCookie("mode") == "dark") {
-        document.documentElement.classList.add("dark");
-        document.getElementById("mode-indicator").textContent = "dark_mode";
-    }
-
     document.getElementById("lang_toggler").textContent = getCookie("locale").toUpperCase();
+
+    if (getCookie("mode") == "dark") document.getElementById("mode-indicator").textContent = "dark_mode";
 });
 
 document.addEventListener("mousedown", (e) => {

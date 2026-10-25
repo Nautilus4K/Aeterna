@@ -8,11 +8,9 @@
         <p>AETERNA</p>
     </a>
 
-    <a class="navlink" href="/">{{ locale.homepage }}</a>
-
-    <a class="navlink" href="/novels">{{ locale.novelpage }}</a>
-
-    <a class="navlink" href="/docs">{{ locale.docpage }}</a>
+    <a class="navlink" href="/">{{ locale.page_home }}</a>
+    <a class="navlink" href="/novels">{{ locale.page_novels }}</a>
+    <a class="navlink" href="/docs">{{ locale.page_docs }}</a>
     
     <div class="divider"></div>
 
@@ -32,15 +30,16 @@
     </button>
 
     <div class="usermenu hidden" id="usermenu">
-        <a href="/logout">{{ locale.logout }}</a>
+        <a href="/config">{{ locale.page_config }}</a>
+        <div class="divider"><p>---</p></div>
+        <a href="/logout" class="logout_btn">{{ locale.logout }}</a>
     </div>
 </div>
 
 <div class="mobile_menu" id="mobile_menu">
-    <a class="navlink" href="/">{{ locale.homepage }}</a>
-    <a class="navlink" href="/novels">{{ locale.novelpage }}</a>
-    <a class="navlink" href="/docs">{{ locale.docpage }}</a>
-
+    <a class="navlink" href="/">{{ locale.page_home }}</a>
+    <a class="navlink" href="/novels">{{ locale.page_novels }}</a>
+    <a class="navlink" href="/docs">{{ locale.page_docs }}</a>
     <div class="divider"></div>
 
     <img class="logo" src="/img/favicon.svg">

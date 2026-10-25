@@ -74,11 +74,13 @@ class DatabaseManager:
                     cur.execute("""--sql
                         CREATE TABLE users (
                             username VARCHAR(50) NOT NULL UNIQUE,
+                            realname VARCHAR(100) NOT NULL,
                             password_hash BYTEA NOT NULL,
-                            bio TEXT DEFAULT '' NOT NULL,
+                            bio VARCHAR(500) DEFAULT '' NOT NULL,
                             gender BOOL DEFAULT FALSE NOT NULL,
                             created TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-                            birthday TIMESTAMPTZ DEFAULT NULL
+                            birthday TIMESTAMPTZ DEFAULT NULL,
+                            linked_docs JSONB DEFAULT '[]'::jsonb
                         )
                     """)
                     missing_tables = True
@@ -119,15 +121,18 @@ class DatabaseManager:
     def add_user(self, username: str, password_hash: bytes):
         assert self.pool is not None
         with self.pool.connection() as conn:
-            conn.execute("INSERT INTO users (username, password_hash) VALUES (%s, %s)", (username, password_hash))
+            conn.execute("INSERT INTO users (username, realname, password_hash) VALUES (%s, %s, %s)", (username, username, password_hash))
             conn.commit()
 
-    def modify_user(self, username: str, bio: str = "", gender: bool = False, birthday: datetime.datetime | None = None):
+        self.userlist.add(username)
+
+    def modify_user(self, username: str, realname: str = "", bio: str = "", gender: bool = False, birthday: datetime.datetime | None = None):
         assert self.pool is not None
         with self.pool.connection() as conn:
+            if realname == "": realname = username
             conn.execute("""--sql
-                UPDATE users SET bio = %s, gender = %s, birthday = %s WHERE username = %s
-            """, (bio, gender, birthday, username))
+                UPDATE users SET realname = %s, bio = %s, gender = %s, birthday = %s WHERE username = %s
+            """, (realname, bio, gender, birthday, username))
             conn.commit()
 
     def change_user_passwd(self, username: str, password_hash: bytes):
@@ -142,7 +147,7 @@ class DatabaseManager:
             conn.execute("DELETE FROM users WHERE username = %s", (username, ))
             conn.commit()
 
-        self.userlist.remove(username)
+        self.userlist.discard(username)
 
     def get_user_password_hash(self, username: str) -> bytes:
         assert self.pool is not None
@@ -152,10 +157,10 @@ class DatabaseManager:
             return data[0]
 
     def get_user_data(self, username: str) -> tuple:
-        """`bio, gender, created, birthday`"""
+        """`realname, bio, gender, created, birthday, linked_docs`"""
         assert self.pool is not None
         with self.pool.connection() as conn:
-            data = conn.execute("SELECT bio, gender, created, birthday FROM users WHERE username = %s", (username, )).fetchone()
+            data = conn.execute("SELECT realname, bio, gender, created, birthday, linked_docs FROM users WHERE username = %s", (username, )).fetchone()
             assert data is not None
             return data
 

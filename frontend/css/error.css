@@ -1,6 +1,6 @@
 .not_found_container {
     width: 100vw;
-    height: calc(100vh - 65px - (2 * 40px));
+    height: calc(100dvh - 65px - (2 * 40px));
 
     display: flex;
     flex-direction: column;

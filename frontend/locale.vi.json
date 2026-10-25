@@ -1,7 +1,8 @@
 {
-    "homepage": "Trang Chủ",
-    "novelpage": "Tiểu Thuyết",
-    "docpage": "Tài Liệu",
+    "page_home": "Trang chủ",
+    "page_novels": "Tiểu thuyết",
+    "page_docs": "Tài liệu",
+    "page_config": "Cài đặt",
 
     "login": "Đăng nhập",
     "logout": "Đăng xuất",
@@ -9,7 +10,18 @@
     "password_label": "Mật Khẩu",
 
     "wip": "ĐANG ĐƯỢC XÂY DỰNG",
+    "not_provided": "Không được cung cấp",
     "login_rate_limited": "Thử quá nhiều. Chậm lại.",
     "login_credentials": "Sai tên đăng nhập hoặc mật khẩu.",
-    "tooltip_lang_toggle": "Đổi ngôn ngữ của bạn."
+    "tooltip_lang_toggle": "Đổi ngôn ngữ của bạn.",
+
+    "label": {
+        "male": "Nam",
+        "female": "Nữ"
+    },
+
+    "profile_gender": "Giới tính",
+    "profile_bio": "Tiểu sử",
+    "profile_createddate": "Tham gia",
+    "profile_birthday": "Sinh nhật"
 }

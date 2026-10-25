@@ -1,7 +1,8 @@
 {
-    "homepage": "Home",
-    "novelpage": "Novels",
-    "docpage": "Documents",
+    "page_home": "Home",
+    "page_novels": "Novels",
+    "page_docs": "Documents",
+    "page_config": "Configuration",
 
     "login": "Log in",
     "logout": "Log out",
@@ -9,7 +10,19 @@
     "password_label": "Password",
 
     "wip": "UNDER CONSTRUCTION",
+    "not_provided": "Not provided",
     "login_rate_limited": "Too many attempts. Timed out.",
     "login_credentials": "Wrong username or password.",
-    "tooltip_lang_toggle": "Change your language."
+
+    "tooltip_lang_toggle": "Change your language.",
+
+    "label": {
+        "male": "Male",
+        "female": "Female"
+    },
+
+    "profile_gender": "Gender",
+    "profile_bio": "Bio",
+    "profile_createddate": "Created",
+    "profile_birthday": "Birthday"
 }

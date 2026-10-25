@@ -9,3 +9,4 @@ psycopg
 psycopg[pool]
 prettytable
 pillow
+cachetools
