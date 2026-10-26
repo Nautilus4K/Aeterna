@@ -45,9 +45,10 @@ def serve_basic_site(db: DatabaseManager, sessions_list: dict[str, dict], path: 
 
         session_token = cookies.get("SESSION_TOKEN")
         username = "NULL"
-        if session_token in sessions_list:
-            userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">'
-            username = sessions_list[session_token]["user"]
+        exists = session_token in sessions_list and db.user_exists(sessions_list[session_token]["user"])
+        if exists:
+            userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">' # type: ignore
+            username = sessions_list[session_token]["user"] # type: ignore
         else:
             userbutton_snippet = LOCALES[locale]["login"]
         
@@ -55,7 +56,7 @@ def serve_basic_site(db: DatabaseManager, sessions_list: dict[str, dict], path: 
             username=username, locale=LOCALES[locale], user_pfp_button=userbutton_snippet,
             usermenu_mode=("login" if username == "NULL" else "")
         ))
-        if session_token not in sessions_list: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
+        if not exists: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
         
         return response, return_code
     else:
@@ -70,9 +71,10 @@ def serve_error(db: DatabaseManager, sessions_list: dict[str, dict], error: int,
 
     session_token = cookies.get("SESSION_TOKEN")
     username = "NULL"
-    if session_token in sessions_list and db.user_exists(sessions_list[session_token]["user"]):
-        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">'
-        username = sessions_list[session_token]["user"]
+    exists = session_token in sessions_list and db.user_exists(sessions_list[session_token]["user"])
+    if exists:
+        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">' # type: ignore
+        username = sessions_list[session_token]["user"] # type: ignore
     else:
         userbutton_snippet = LOCALES[locale]["login"]
     
@@ -80,7 +82,7 @@ def serve_error(db: DatabaseManager, sessions_list: dict[str, dict], error: int,
         code=str(error), message=str(message), username=username, locale=LOCALES[locale], user_pfp_button=userbutton_snippet,
         usermenu_mode=("login" if username == "NULL" else "")
     ))
-    if session_token not in sessions_list: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
+    if not exists: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
 
     return response, error
 
@@ -94,9 +96,11 @@ def serve_profile(db: DatabaseManager, sessions_list: dict[str, dict], target_pr
 
     session_token = cookies.get("SESSION_TOKEN")
     username = "NULL"
-    if session_token in sessions_list and db.user_exists(sessions_list[session_token]["user"]):
-        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">'
-        username = sessions_list[session_token]["user"]
+
+    exists = session_token in sessions_list and db.user_exists(sessions_list[session_token]["user"])
+    if exists:
+        userbutton_snippet = f'<img src="/img/user/{sessions_list[session_token]["user"]}/100">' # type: ignore
+        username = sessions_list[session_token]["user"] # type: ignore
     else:
         userbutton_snippet = LOCALES[locale]["login"]
 
@@ -109,7 +113,7 @@ def serve_profile(db: DatabaseManager, sessions_list: dict[str, dict], target_pr
         username=username, locale=LOCALES[locale], user_pfp_button=userbutton_snippet,
         usermenu_mode=("login" if username == "NULL" else "")
     ))
-    if session_token not in sessions_list: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
+    if not exists: response.set_cookie("SESSION_TOKEN", "", max_age=0, expires=0) # Remove the token
 
     return response, 200
 

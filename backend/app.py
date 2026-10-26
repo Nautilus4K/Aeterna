@@ -153,9 +153,10 @@ rate_limiter = TTLCache(maxsize=10000, ttl=30)
 @app.route("/loginauth", methods=['POST'])
 def auth():
     if request.remote_addr in rate_limiter:
-        return LOCALES[get_locale(request.cookies)]["login_rate_limited"], 429
+        if rate_limiter[request.remote_addr] > 3: return LOCALES[get_locale(request.cookies)]["login_rate_limited"], 429 # type: ignore
+        else: rate_limiter[request.remote_addr] += 1 # type: ignore
     else:
-        rate_limiter[request.remote_addr] = None
+        rate_limiter[request.remote_addr] = 1
 
     locale = get_locale(request.cookies)
     data = request.get_json()

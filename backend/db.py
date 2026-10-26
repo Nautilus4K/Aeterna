@@ -102,6 +102,8 @@ class DatabaseManager:
         self.pool.wait()
         atexit.register(self.close)
 
+        # print(self.user_exists("nautilus"))
+
     def close(self):
         assert self.pool is not None
         if self._open:
