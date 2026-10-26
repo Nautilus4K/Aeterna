@@ -229,3 +229,9 @@ postgresql/*
 # Temporary files
 run/
 sessions.json
+
+# User/server specific files
+frontend/img/*.webp
+frontend/img/*.jpg
+frontend/img/*.jpeg
+frontend/img/*.png
